@@ -2,6 +2,22 @@
   "name": "tsx",
   "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "@banka/eslint-config-react": "^1.0.0",
+    "@types/styled-components": "^5.1.21",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^25.2.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.22.0",
+    "prettier": "^2.5.1",
+    "pretty-print-json": "^1.1.2",
+    "sass": "^1.49.0",
+    "styled-components": "^5.3.3"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -12,7 +28,9 @@
     "@types/react-dom": "^17.0.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "recoil": "^0.5.2",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
@@ -24,9 +42,11 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+      "@banka/react"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    }
   },
   "browserslist": {
     "production": [
