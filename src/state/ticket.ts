@@ -1,4 +1,6 @@
-import { DefaultValue, atomFamily, selectorFamily } from "recoil"
+import { FC } from "react"
+
+import { DefaultValue, atomFamily, selectorFamily, atom } from "recoil"
 
 export type Ticket = {
   id: string
@@ -11,6 +13,11 @@ const EMPTY_TICKET: Ticket = {
   points: 1,
   concern: `bug`,
 }
+
+export const ticketState = atom<Ticket>({
+  key: `ticketState`,
+  default: EMPTY_TICKET,
+})
 
 export const findTicketState = atomFamily<Ticket, string>({
   key: `ticket`,

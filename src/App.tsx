@@ -1,7 +1,8 @@
 import type { FC } from "react"
+import { useState } from "react"
 
 import { Routes, Route, Outlet, Link } from "react-router-dom"
-import { useRecoilState } from "recoil"
+import { atom, useRecoilState } from "recoil"
 
 import { DebugInspector } from "./DebugInspector"
 import { RadioButtons } from "./RecoilRadioButtons"
@@ -65,14 +66,27 @@ function Layout() {
 }
 
 function Home() {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true)
   return (
-    <div>
+    <div style={{ background: isDarkMode ? `black` : `white` }}>
+      <button onClick={() => setIsDarkMode(true)}></button>
       <h2>Home</h2>
     </div>
   )
 }
 
+type Profile = {
+  firstName: string
+  lastName: string
+}
+
+export const profileState = atom<Profile | undefined>({
+  key: `profile`,
+  default: undefined,
+})
+
 function About() {
+  const [profile, setProfile] = useRecoilState(profileState)
   return (
     <div>
       <h2>About</h2>
