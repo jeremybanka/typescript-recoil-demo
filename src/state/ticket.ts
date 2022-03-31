@@ -1,5 +1,3 @@
-import { FC } from "react"
-
 import { DefaultValue, atomFamily, selectorFamily, atom } from "recoil"
 
 export type Ticket = {
@@ -14,14 +12,48 @@ const EMPTY_TICKET: Ticket = {
   concern: `bug`,
 }
 
-export const ticketState = atom<Ticket>({
-  key: `ticketState`,
-  default: EMPTY_TICKET,
-})
+type History = Array<{
+  label: string
+  undo: () => void
+  redo: () => void
+}> & { marker: number }
+
+export const history: History = (() => {
+  const h = [] as unknown as History
+  h.marker = -1
+  return h
+})()
+
+function divergeTimeline(): void {
+  for (let i = 0; i < history.marker + 1; i++) {
+    history.shift()
+  }
+  history.marker = -1
+}
 
 export const findTicketState = atomFamily<Ticket, string>({
   key: `ticket`,
   default: EMPTY_TICKET,
+  effects: (id) => [
+    ({ onSet, setSelf }) => {
+      onSet((newValue, oldValue) => {
+        console.debug(`Current user ID:`, newValue, `:`, id)
+        const atPresent = history.marker === -1
+        if (!atPresent) divergeTimeline()
+        history.unshift({
+          label: `Set ticket ${id} to ${newValue}`,
+          undo: () => setSelf(oldValue),
+          redo: () => setSelf(newValue),
+        })
+        console.debug(`History:`, history)
+      })
+    },
+  ],
+})
+
+export const ticketIndex = atom<string[]>({
+  key: `ticketIndex`,
+  default: [`foo`, `bar`],
 })
 
 export const findTicketPoints = selectorFamily<Ticket[`points`], string>({

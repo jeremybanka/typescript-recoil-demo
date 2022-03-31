@@ -19,7 +19,7 @@ export const RadioButtons = <T extends number | string>(
         <label key={v}>
           <input
             type="radio"
-            name="radio"
+            name={state.key}
             value={v}
             checked={v === value}
             onChange={() => setValue(v)}

@@ -2,11 +2,16 @@ import type { FC } from "react"
 import { useState } from "react"
 
 import { Routes, Route, Outlet, Link } from "react-router-dom"
-import { atom, useRecoilState } from "recoil"
+import { atom, useRecoilState, useRecoilValue } from "recoil"
 
 import { DebugInspector } from "./DebugInspector"
 import { RadioButtons } from "./RecoilRadioButtons"
-import { findTicketPoints, findTicketState } from "./state/ticket"
+import {
+  findTicketPoints,
+  findTicketState,
+  history,
+  ticketIndex,
+} from "./state/ticket"
 
 export const App: FC = () => {
   return (
@@ -53,6 +58,22 @@ function Layout() {
             <Link to="/nothing-here">Nothing Here</Link>
           </li>
         </ul>
+        <button
+          onClick={() => {
+            history.marker += 1
+            history[history.marker]?.undo()
+          }}
+        >
+          Undo
+        </button>
+        <button
+          onClick={() => {
+            history.marker -= 1
+            history[history.marker + 1]?.redo()
+          }}
+        >
+          Redo
+        </button>
       </nav>
 
       <hr />
@@ -95,7 +116,18 @@ function About() {
 }
 
 function Dashboard() {
-  const ticketPointsState = findTicketPoints(`foo`)
+  const ticketIds = useRecoilValue(ticketIndex)
+  return (
+    <>
+      {ticketIds.map((id) => (
+        <TicketPanel key={id} id={id} />
+      ))}
+    </>
+  )
+}
+
+const TicketPanel: FC<{ id: string }> = ({ id }) => {
+  const ticketPointsState = findTicketPoints(id)
   return (
     <div>
       <RadioButtons state={ticketPointsState} options={[1, 2, 3, 5, 8]} />
